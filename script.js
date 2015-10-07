@@ -29,7 +29,6 @@ function createTable(id) {
 
 // Create 2 tables
 var tbl1 = createTable("table1");
-document.body.appendChild(document.createElement("br")); // Add line break
 var tbl2 = createTable("table2");
 
 // Define some pegs
