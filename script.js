@@ -1,8 +1,9 @@
 var rowNames = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 var columnNames = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 
-function createTable() {
+function createTable(id) {
 	var tbl  = document.createElement('table');
+	tbl.id = id;
 
     for(var y = 0; y < 11; ++y){
         var tr = tbl.insertRow();
@@ -21,15 +22,26 @@ function createTable() {
         }
     }
 
+	var redPeg = document.createElement("div");
+	redPeg.id = "red-peg";
+
+	var whitePeg = document.createElement("div");
+	whitePeg.id = "white-peg";
+
+	tbl.firstChild.children[2].children[2].appendChild(redPeg);
+	tbl.firstChild.children[2].children[3].appendChild(whitePeg);
     document.body.appendChild(tbl);
+	return tbl;
 }
 
-createTable();
-var br = document.createElement("br");
+var tbl = createTable("table1");
 
+
+/*
+var br = document.createElement("br");
 document.body.appendChild(br);
 createTable();
-
+*/
 
 /* Backup */
 var backup = function() {
