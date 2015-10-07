@@ -1,5 +1,6 @@
 var rowNames = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 var columnNames = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
+var shipLengths = [5, 4, 3, 3, 2];
 
 function createTable(id) {
 	var tbl  = document.createElement('table');
@@ -31,7 +32,6 @@ var tbl1 = createTable("table1");
 document.body.appendChild(document.createElement("br")); // Add line break
 var tbl2 = createTable("table2");
 
-
 // Define some pegs
 var redPeg = document.createElement("div");
 var whitePeg = document.createElement("div");
@@ -42,41 +42,29 @@ whitePeg.id = "white-peg";
 tbl1.firstChild.children[2].children[2].appendChild(redPeg);
 tbl2.firstChild.children[2].children[2].appendChild(whitePeg);
 
-/*
-var br = document.createElement("br");
-document.body.appendChild(br);
-createTable();
-*/
-
-/* Backup */
-var backup = function() {
-	var shipLengths = [5, 4, 3, 3, 2];
-
-	function Feild() {
-
-		/* Create grid, a 2 dimensional array representing the in game grid. Each
-		 * element in grid is an index to a ship, zero if no ship is placed there,
-		 * or a negative number if a ship has been hit there. */
-		this.grid = new Array(10);
-		for(var y=0; y<this.grid.length; ++y) {
-			this.grid[y] = new Array(10);
-			for(var x=0; x<this.grid[y].length; ++x)
-				this.grid[y][x] = 0;
-		}
-
-		var ships = new Array(5);
-		for(var i = 0; i<ships.length; ++i) {
-			ships[i] = new Ship(shipLengths[i]);
-		}
-
-		var shipsRemaining = 5;
+function Feild() {
+	/* Create grid, a 2 dimensional array representing the in game grid. Each
+	 * element in grid is an index to a ship, zero if no ship is placed there,
+	 * or a negative number if a ship has been hit there. */
+	this.grid = new Array(10);
+	for(var y=0; y<this.grid.length; ++y) {
+		this.grid[y] = new Array(10);
+		for(var x=0; x<this.grid[y].length; ++x)
+			this.grid[y][x] = 0;
 	}
 
-	Feild.prototype.Ship = function(length) {
-		this.health = length;
+	var ships = new Array(5);
+	for(var i = 0; i<ships.length; ++i) {
+		ships[i] = new Ship(shipLengths[i]);
 	}
 
-	var feild = new Array(10);
-	for(var i = 0; i<feild.length; ++i)
-		feild[i] = new Array(10);
-};
+	var shipsRemaining = 5;
+}
+
+Feild.prototype.Ship = function(length) {
+	this.health = length;
+}
+
+var feild = new Array(10);
+for(var i = 0; i<feild.length; ++i)
+	feild[i] = new Array(10);
