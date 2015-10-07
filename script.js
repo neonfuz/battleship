@@ -22,20 +22,25 @@ function createTable(id) {
         }
     }
 
-	var redPeg = document.createElement("div");
-	redPeg.id = "red-peg";
-
-	var whitePeg = document.createElement("div");
-	whitePeg.id = "white-peg";
-
-	tbl.firstChild.children[2].children[2].appendChild(redPeg);
-	tbl.firstChild.children[2].children[3].appendChild(whitePeg);
-    document.body.appendChild(tbl);
+	document.body.appendChild(tbl);
 	return tbl;
 }
 
-var tbl = createTable("table1");
+// Create 2 tables
+var tbl1 = createTable("table1");
+document.body.appendChild(document.createElement("br")); // Add line break
+var tbl2 = createTable("table2");
 
+
+// Define some pegs
+var redPeg = document.createElement("div");
+var whitePeg = document.createElement("div");
+redPeg.id = "red-peg";
+whitePeg.id = "white-peg";
+
+// Add some test pegs to the boards
+tbl1.firstChild.children[2].children[2].appendChild(redPeg);
+tbl2.firstChild.children[2].children[2].appendChild(whitePeg);
 
 /*
 var br = document.createElement("br");
