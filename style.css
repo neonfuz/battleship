@@ -1,5 +1,5 @@
 body {
-    font-family: sans;
+    font-family: sans-serif;
 }
 
 table {
@@ -8,30 +8,50 @@ table {
     margin-right: auto;
 	margin-top: 2em;
 	margin-bottom: 2em;
-}
-
-th, td {
-    border: 4px solid black;
-	width: 2em;
-	height: 2em;
-}
-
-td {
 	background-color: #00506c;
 }
 
-#red-peg, #white-peg {
+th, td {
+    border: .25em solid black;
+	width: 2em;
+	height: 2em;
+	max-width: 2em;
+	max-height: 2em;
+}
+
+th {
+	background-color: #3295b7;
+	color: white;
+}
+
+.cell {
+	position: relative;
+	width: 100%;
+	height: 100%;
+	margin: 0px;
+	padding: 0px;
+}
+
+.peg-holder { padding: .25em; }
+
+.red-peg, .white-peg {
+	width: 1.5em;
+	height: 1.5em;
+	border-radius: .75em;
+	position: absolute;
+}
+
+.red-peg { background-color: #9a0000; }
+.white-peg { background-color: white; }
+
+.ship {
     width: 2em;
     height: 2em;
-    -webkit-border-radius: 1em;
-    -moz-border-radius: 1em;
-    border-radius: 1em; 
+    border-radius: 1em;
+	position: absolute;
+	background-color: grey;
 }
 
-#red-peg {
-	background-color: #9a0000;
-}
-
-#white-peg {
-	background-color: white;
+.hidden {
+	visibility: hidden;
 }

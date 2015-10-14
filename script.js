@@ -1,69 +1,167 @@
-var rowNames = ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
+var rowNames =    ['', 'A', 'B', 'C', 'D', 'E', 'F', 'G', 'H', 'I', 'J'];
 var columnNames = ['', '1', '2', '3', '4', '5', '6', '7', '8', '9', '10'];
 var shipLengths = [5, 4, 3, 3, 2];
 
-function createTable(id) {
-	var tbl  = document.createElement('table');
-	tbl.id = id;
+var feilds = new Array();
 
-    for(var y = 0; y < 11; ++y){
-        var tr = tbl.insertRow();
-        for(var x = 0; x < 11; ++x){
-			if (x === 0 || y === 0) {
-				var cell = document.createElement("th");
-				if (x === 0) {
-					cell.innerHTML = columnNames[y];
-				} else { // y === 0
-					cell.innerHTML = rowNames[x];
-				}
-				tr.appendChild(cell);
-			} else {
-				tr.insertCell();
-			}
-        }
-    }
+// This breaks IE
+function alertPosition() {
+	var x = parseInt(this.getAttribute("x"));
+	var y = parseInt(this.getAttribute("y"));
 
-	document.body.appendChild(tbl);
-	return tbl;
+	var feild = feilds[this.getAttribute("feildIndex")];
+
+	if(feild.data[y][x].peg === undefined) {
+		var pegholder = document.createElement("div");
+		var peg = document.createElement("div");
+		pegholder.appendChild(peg);
+
+		pegholder.className = "peg-holder";
+		if(feild.data[y][x].id === 0) {
+			peg.className = "white-peg";
+		} else {
+			peg.className = "red-peg";
+		}
+
+		feild.data[y][x].domCell.appendChild(pegholder);
+		feild.data[y][x].peg = peg;
+	}
+
+	var shipId = feild.data[y][x].id
+	if(shipId !== 0) {
+		feild.data[y][x].id = 0;
+		feild.ships[shipId-1].health--;
+		if(feild.ships[shipId-1].health <= 0) {
+			var domobj = feild.ships[shipId-1].dom;
+			domobj.parentNode.removeChild(domobj);
+		}
+	}
 }
 
-// Create 2 tables
-var tbl1 = createTable("table1");
-var tbl2 = createTable("table2");
+function Ship(id, length, x, y, axis) {
+	this.id = id;
+	this.length = length;
+	this.health = length;
+	this.x = x;
+	this.y = y;
+	this.axis = axis;
+}
 
-// Define some pegs
-var redPeg = document.createElement("div");
-var whitePeg = document.createElement("div");
-redPeg.id = "red-peg";
-whitePeg.id = "white-peg";
+Ship.prototype.randomizePlacement = function() {
+	var other;
+	if(Math.random() < .5) {
+		this.axis = "x";
+		other = "y";
+	} else {
+		this.axis = "y";
+		other = "x";
+	}
+	
+	this[this.axis] = Math.floor(Math.random() * (this.length + 1));
+	this[other] = Math.floor(Math.random() * 10);
+}
 
-// Add some test pegs to the boards
-tbl1.firstChild.children[2].children[2].appendChild(redPeg);
-tbl2.firstChild.children[2].children[2].appendChild(whitePeg);
+/* returns true upon success and false upon failure. */
+Ship.prototype.place = function(feild) {
+	var point = {
+		x: this.x,
+		y: this.y
+	};
+	var goal = this[this.axis] + this.length;
 
-function Feild() {
+	for (; point[this.axis]<goal; ++point[this.axis])
+		if (feild.data[point.y][point.x].id !== 0)
+			return false; // TODO: Throw error instead?
+
+	// Reset the axis we iterated over
+	point[this.axis] = this[this.axis];
+
+	var direction = this.axis === "x" ? "width" : "height";
+	var style = direction + ":calc(" + (2.25 * this.length - .25) + "em + " + (this.length-1)*2 + "px);";
+
+	this.dom = document.createElement("div");
+	this.dom.className = "ship";
+	this.dom.style=style;
+//	this.dom.className += " hidden";
+	feild.data[point.y][point.x].domCell.appendChild(this.dom);
+
+	for (; point[this.axis]<goal; ++point[this.axis]) {
+		feild.data[point.y][point.x].id = this.id;
+	}
+	
+	return true;
+}
+
+function Feild(id) {
 	/* Create grid, a 2 dimensional array representing the in game grid. Each
 	 * element in grid is an index to a ship, zero if no ship is placed there,
 	 * or a negative number if a ship has been hit there. */
-	this.grid = new Array(10);
-	for(var y=0; y<this.grid.length; ++y) {
-		this.grid[y] = new Array(10);
-		for(var x=0; x<this.grid[y].length; ++x)
-			this.grid[y][x] = 0;
+
+	this.table = this.createTable(id);
+
+	feilds[id] = this;
+
+	this.data = new Array(10);
+	for(var y=0; y<this.data.length; ++y) {
+		this.data[y] = new Array(10);
+		for(var x=0; x<this.data[y].length; ++x) {
+			this.data[y][x] = { id: 0 };
+			this.data[y][x].domCell = this.table.firstChild.children[y+1].children[x+1].firstChild;
+			this.data[y][x].domCell.setAttribute("x", x);
+			this.data[y][x].domCell.setAttribute("y", y);
+			this.data[y][x].domCell.setAttribute("feildIndex", id);
+			this.data[y][x].domCell.onclick = alertPosition;
+		}
 	}
 
-	var ships = new Array(5);
-	for(var i = 0; i<ships.length; ++i) {
-		ships[i] = new Ship(shipLengths[i]);
+	this.ships = new Array(shipLengths.length);
+	for(var i = 0; i<this.ships.length; ++i) {
+		this.ships[i] = new Ship(i+1, shipLengths[i]);
 	}
 
-	var shipsRemaining = 5;
+	this.shipsRemaining = shipLengths.length;
 }
 
-Feild.prototype.Ship = function(length) {
-	this.health = length;
+Feild.prototype.createTable = function (id) {
+	var tbl  = document.createElement('table');
+	tbl.id = id;
+
+	for(var y = 0; y < 11; ++y){
+		var tr = tbl.insertRow();
+		for(var x = 0; x < 11; ++x){
+			if (x === 0 || y === 0) {
+				var cell = document.createElement("th");
+				if (x === 0) {
+					cell.innerHTML = rowNames[y];
+				} else { // y === 0
+					cell.innerHTML = columnNames[x];
+				}
+				tr.appendChild(cell);
+			} else {
+				var cell = tr.insertCell();
+				cell.innerHTML = '<div class="cell"></div>';
+			}
+		}
+	}
+
+	return tbl;
 }
 
-var feild = new Array(10);
-for(var i = 0; i<feild.length; ++i)
-	feild[i] = new Array(10);
+Feild.prototype.randomize = function () {
+	for(var i=0; i<this.ships.length; ++i) {
+		var loop;
+		do {
+			this.ships[i].randomizePlacement();
+			loop = !this.ships[i].place(this);
+		} while (loop);
+	}
+}
+
+var feild1 = new Feild("feild1");
+var feild2 = new Feild("feild2");
+
+document.body.appendChild(feild1.table);
+document.body.appendChild(feild2.table);
+
+feild1.randomize();
+feild2.randomize();
