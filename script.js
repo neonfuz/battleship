@@ -4,6 +4,17 @@ var shipLengths = [5, 4, 3, 3, 2];
 
 var feilds = new Array();
 
+var outConsole = document.getElementById("console-window");
+
+function print(string) {
+	outConsole.innerHTML += string;
+	outConsole.scrollTop = outConsole.scrollHeight;
+}
+
+function println(string) {
+	print(string + "<br/>");
+}
+
 // This breaks IE
 function alertPosition() {
 	var x = parseInt(this.getAttribute("x"));
@@ -19,6 +30,7 @@ function alertPosition() {
 		pegholder.className = "peg-holder";
 		if(feild.data[y][x].id === 0) {
 			peg.className = "white-peg";
+            println(feild.id + ": Miss!");
 		} else {
 			peg.className = "red-peg";
 		}
@@ -33,8 +45,13 @@ function alertPosition() {
 		feild.ships[shipId-1].health--;
 		if(feild.ships[shipId-1].health <= 0) {
 			var domobj = feild.ships[shipId-1].dom;
-			domobj.parentNode.removeChild(domobj);
-		}
+		    domobj.parentNode.removeChild(domobj);
+            --feild.shipsRemaining;
+            feild.updateScore();
+            println(feild.id + ": Sunk!");
+		} else {
+            println(feild.id + ": Hit!");
+        }
 	}
 }
 
@@ -81,6 +98,7 @@ Ship.prototype.place = function(feild) {
 
 	this.dom = document.createElement("div");
 	this.dom.className = "ship";
+    this.dom.className += " hide-" + feild.id;
 	this.dom.style=style;
 //	this.dom.className += " hidden";
 	feild.data[point.y][point.x].domCell.appendChild(this.dom);
@@ -92,13 +110,14 @@ Ship.prototype.place = function(feild) {
 	return true;
 }
 
-function Feild(id) {
+function Feild(id, scoreId) {
 	/* Create grid, a 2 dimensional array representing the in game grid. Each
 	 * element in grid is an index to a ship, zero if no ship is placed there,
 	 * or a negative number if a ship has been hit there. */
 
 	this.table = this.createTable(id);
 
+    this.id = id;
 	feilds[id] = this;
 
 	this.data = new Array(10);
@@ -120,6 +139,12 @@ function Feild(id) {
 	}
 
 	this.shipsRemaining = shipLengths.length;
+    this.scoreDisplay = document.getElementById(scoreId);
+    this.updateScore();
+}
+
+Feild.prototype.updateScore = function() {
+    this.scoreDisplay.innerHTML = "" + this.shipsRemaining;
 }
 
 Feild.prototype.createTable = function (id) {
@@ -157,11 +182,25 @@ Feild.prototype.randomize = function () {
 	}
 }
 
-var feild1 = new Feild("feild1");
-var feild2 = new Feild("feild2");
+// TODO: replace feildx and playerx-score with just x
+var feild1 = new Feild("feild1", "player1-score", 1);
+var feild2 = new Feild("feild2", "player2-score", 2);
 
 document.body.appendChild(feild1.table);
 document.body.appendChild(feild2.table);
 
 feild1.randomize();
 feild2.randomize();
+
+$('.ship').toggle();
+
+$('#player1').click(function() {
+    $('.hide-feild1').toggle();
+});
+
+$('#player2').click(function() {
+    $('.hide-feild2').toggle();
+});
+
+
+

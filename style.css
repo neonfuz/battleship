@@ -55,3 +55,22 @@ th {
 .hidden {
 	visibility: hidden;
 }
+
+#console-window {
+	background-color: #00506c;
+	color: white;
+	font-family: "Lucida Console", Consolas, Monaco, monospace;
+    width: 15ch;
+    max-width: 15ch;
+    height: 50ch;
+    max-height: 50ch;
+	overflow-x: hidden;
+	overflow-y: hidden;
+	text-align: left;
+	margin-left: auto;
+	margin-right: auto;
+	padding: 0 0 0 1em;
+	border-top: 1em solid #00506c;
+	border-right: 1em solid #00506c;
+	border-bottom: 1em solid #00506c;
+}

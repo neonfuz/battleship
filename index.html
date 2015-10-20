@@ -3,22 +3,25 @@
   <head>
 	<meta charset="utf-8">
 	<link rel="stylesheet" type="text/css" href="style.css">
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.3/jquery.min.js"></script>
   </head>
   <body>
-	<div class="hidden" id="player1">
-	  <h2> Player 1:</h2>
-	  <select>
-		<option value="human-local">Local Human</option>
-		<option value="cpu">CPU</option>
-	  </select>
-	</div>
-	<div class="hidden" id="player2">
-	  <h2> Player 2:</h2>
-	  <select>
-		<option value="human-local">Local Human</option>
-		<option value="cpu">CPU</option>
-	  </select>
-	</div>
+    <div style="position: absolute; ">
+	  <div id="player1">
+	    <h2> Player 1:</h2>
+        <div id="player1-score"></div>
+	  </div>
+	  <div id="player2">
+	    <h2> Player 2:</h2>
+        <p id="player2-score"></p>
+	  </div>
+      <div id="console-window"></div>
+    </div>
 	<script src="script.js"></script>
   </body>
 </html>
+<!--
+	<select>
+	  <option value="human-local">Local Human</option>
+	  <option value="cpu">CPU</option>
+	</select>-->
