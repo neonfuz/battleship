@@ -61,7 +61,7 @@ th {
 	color: white;
 	font-family: "Lucida Console", Consolas, Monaco, monospace;
     width: 15ch;
-    max-width: 15ch;
+    max-width: 13ch;
     height: 50ch;
     max-height: 50ch;
 	overflow-x: hidden;
@@ -69,8 +69,27 @@ th {
 	text-align: left;
 	margin-left: auto;
 	margin-right: auto;
-	padding: 0 0 0 1em;
-	border-top: 1em solid #00506c;
-	border-right: 1em solid #00506c;
-	border-bottom: 1em solid #00506c;
+    border: 5pt solid black;
+}
+
+#winscreen {
+    position: fixed;
+    width: 80%;
+    height: 80%;
+    right: 0;
+    left: 0;
+    top: 0;
+    bottom: 0;
+    margin-left: auto;
+    margin-right: auto;
+    margin-top: auto;
+    margin-bottom: auto;
+    text-align: center;
+    background-color: #00506c;
+    color: white;
+    border: 20pt solid black;
+    border-radius: 50pt;
+    z-index: 5;
+    font-size: 80pt;
+    font-weight: bold
 }

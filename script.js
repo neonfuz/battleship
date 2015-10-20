@@ -49,6 +49,12 @@ function alertPosition() {
             --feild.shipsRemaining;
             feild.updateScore();
             println(feild.id + ": Sunk!");
+            if(feild.shipsRemaining === 0) {
+                console.log("end");
+                var winscreen = $("#winscreen");
+                winscreen.html("</br>No more ships on " + feild.id + ".");
+                winscreen.toggle();
+            }
 		} else {
             println(feild.id + ": Hit!");
         }
@@ -193,6 +199,8 @@ feild1.randomize();
 feild2.randomize();
 
 $('.ship').toggle();
+
+$('#winscreen').toggle();
 
 $('#player1').click(function() {
     $('.hide-feild1').toggle();
